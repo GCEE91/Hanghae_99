@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 
+//미완성
+
 function App() {
   return (
     <div className="App">
