@@ -1,12 +1,28 @@
 import React from "react";
 import _ from "lodash";
+import Spinner from "../elements/Spinner";
 
 const InfinityScroll = (props) => {
   const { children, callNext, is_next, loading } = props;
 
   // 쓰로틀을 적용합시다!
   const _handleScroll = _.throttle(() => {
+    const { innerHeight } = window;
+    const { scrollHeight } = document.body;
+
+    // 스크롤 계산!
+    const scrollTop =
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+
+    if (scrollHeight - innerHeight - scrollTop < 200) {
+      // 로딩 중이면 다음 걸 부르면 안되겠죠!
+      if (loading) {
+        return;
+      }
+
       callNext();
+    }
   }, 300);
 
   const handleScroll = React.useCallback(_handleScroll, [loading]);
@@ -31,6 +47,7 @@ const InfinityScroll = (props) => {
   return (
     <React.Fragment>
       {children}
+      {is_next && (<Spinner/>)}
     </React.Fragment>
   );
 };
